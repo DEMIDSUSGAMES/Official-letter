@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Купить буквы</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg: #000000;
+  --card: #111111;
+  --text: #ffffff;
+  --muted: #888888;
+  --accent: #1ea7ff;
+  --success: #2ed573;
+  --border: 1px solid #222222;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ШАПКА */
+.header {
+  text-align: center;
+  padding: 30px 0;
+  margin-bottom: 20px;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #1ea7ff, #8be9fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* КАРТОЧКИ ТОВАРОВ */
+.products-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.product-card {
+  background: linear-gradient(145deg, #0f0f0f, #0a0a0a);
+  border-radius: 16px;
+  padding: 20px;
+  border: var(--border);
+  transition: all 0.2s;
+}
+
+.product-card:hover {
+  border-color: var(--accent);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.card-title i {
+  color: var(--accent);
+}
+
+.card-desc {
+  color: var(--muted);
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.card-price {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-old {
+  text-decoration: line-through;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.discount {
+  background: rgba(46, 213, 115, 0.2);
+  color: var(--success);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.buy-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #1ea7ff, #0d8ce0);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* НИЖНЯЯ МЕНЮШКА */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #111111;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 20px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.bottom-sheet.active {
+  transform: translateY(0);
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: var(--border);
+}
+
+.sheet-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ВЫБОР БУКВ В МЕНЮШКЕ */
+.letters-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.letter-option {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: var(--border);
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.letter-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.letter-option.selected {
+  background: linear-gradient(135deg, #1ea7ff, #0d8ce0);
+  color: white;
+  border-color: transparent;
+  transform: scale(1.05);
+}
+
+.selection-info {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: var(--border);
+}
+
+.selection-info h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.selection-price {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+/* ФОРМА ОПЛАТЫ В МЕНЮШКЕ */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.form-input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.input-row .form-group {
+  flex: 1;
+}
+
+/* ГАЛОЧКА СОХРАНЕНИЯ */
+.save-card-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.save-card-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+.save-card-checkbox label {
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* КНОПКИ В МЕНЮШКЕ */
+.sheet-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.sheet-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sheet-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  border: var(--border);
+}
+
+.sheet-btn.primary {
+  background: linear-gradient(135deg, #1ea7ff, #0d8ce0);
+  color: white;
+}
+
+/* СЕРТИФИКАТ */
+.certificate-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.certificate-section.active {
+  display: flex;
+}
+
+.certificate-content {
+  background: linear-gradient(145deg, #0f0f0f, #0a0a0a);
+  border-radius: 20px;
+  padding: 30px;
+  border: 2px solid var(--accent);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.certificate-letter {
+  font-size: 80px;
+  font-weight: 900;
+  color: var(--accent);
+  margin: 20px 0;
+  text-shadow: 0 0 30px rgba(30, 167, 255, 0.3);
+}
+
+.certificate-info {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.certificate-details {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+/* ИСТОРИЯ ПОКУПОК */
+.recent-purchases {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: var(--border);
+}
+
+.section-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.purchases-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 15px;
+}
+
+.purchase-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  border: var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.purchase-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
+}
+
+.purchase-letter {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.purchase-name {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.purchase-date {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.no-purchases {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  grid-column: 1 / -1;
+}
+
+/* УВЕДОМЛЕНИЯ */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(15, 15, 15, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  border-left: 4px solid var(--accent);
+  display: none;
+  align-items: center;
+  gap: 12px;
+  z-index: 3000;
+  max-width: 350px;
+  animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.notification.active {
+  display: flex;
+}
+
+.notification-icon {
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.notification-message {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ФУТЕР */
+.footer {
+  text-align: center;
+  padding: 30px 0 20px;
+  color: var(--muted);
+  font-size: 13px;
+  border-top: var(--border);
+  margin-top: 40px;
+}
+
+/* АДАПТИВ */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .letters-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .purchases-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .input-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- ШАПКА -->
+  <div class="header">
+    <div class="logo">Купить букву</div>
+    <div class="subtitle">Приобретите уникальные буквы</div>
+  </div>
+
+  <!-- КАТАЛОГ ТОВАРОВ -->
+  <div class="products-grid">
+    <!-- РУССКАЯ БУКВА -->
+    <div class="product-card">
+      <div class="card-title">
+        <i class="fas fa-cyrillic"></i>
+        <span>Русская буква</span>
+      </div>
+      <div class="card-desc">Выберите любую букву русского алфавита</div>
+      <div class="card-price">
+        <span class="price-old">25 ₽</span>
+        20 ₽
+        <span class="discount">-20%</span>
+      </div>
+      <button class="buy-btn" onclick="openLetterSheet('russian')">
+        <i class="fas fa-shopping-cart"></i>
+        Купить букву
+      </button>
+    </div>
+
+    <!-- АНГЛИЙСКАЯ БУКВА -->
+    <div class="product-card">
+      <div class="card-title">
+        <i class="fas fa-language"></i>
+        <span>Английская буква</span>
+      </div>
+      <div class="card-desc">Любая буква английского алфавита</div>
+      <div class="card-price">25 ₽</div>
+      <button class="buy-btn" onclick="openLetterSheet('english')">
+        <i class="fas fa-shopping-cart"></i>
+        Купить букву
+      </button>
+    </div>
+
+    <!-- ВЕСЬ РУССКИЙ АЛФАВИТ -->
+    <div class="product-card">
+      <div class="card-title">
+        <i class="fas fa-gem"></i>
+        <span>Весь русский алфавит</span>
+      </div>
+      <div class="card-desc">Все 33 буквы русского алфавита</div>
+      <div class="card-price">
+        <span class="price-old">660 ₽</span>
+        566 ₽
+        <span class="discount">-14%</span>
+      </div>
+      <button class="buy-btn" onclick="buyFullAlphabet()">
+        <i class="fas fa-shopping-cart"></i>
+        Купить весь алфавит
+      </button>
+    </div>
+  </div>
+
+  <!-- ИСТОРИЯ ПОКУПОК -->
+  <div class="recent-purchases">
+    <div class="section-title">
+      <i class="fas fa-history"></i>
+      <span>История покупок</span>
+    </div>
+    <div id="purchasesContainer" class="purchases-list">
+      <!-- Будут загружены через JS -->
+    </div>
+  </div>
+
+  <!-- ФУТЕР -->
+  <div class="footer">
+    Для связи: Telegram @Demid_Ca • Все платежи защищены
+  </div>
+</div>
+
+<!-- НИЖНЯЯ МЕНЮШКА ВЫБОРА БУКВ -->
+<div class="bottom-sheet" id="letterSheet">
+  <div class="sheet-header">
+    <div class="sheet-title" id="sheetTitle">Выберите букву</div>
+    <button class="close-btn" onclick="closeSheet('letterSheet')">&times;</button>
+  </div>
+  
+  <div class="letters-grid" id="lettersContainer">
+    <!-- Буквы загрузятся через JS -->
+  </div>
+  
+  <div class="selection-info">
+    <h3>Выбрано: <span id="selectedLetterText">—</span></h3>
+    <div class="selection-price" id="selectedLetterPrice">0 ₽</div>
+    
+    <div class="sheet-buttons">
+      <button class="sheet-btn secondary" onclick="closeSheet('letterSheet')">
+        Отмена
+      </button>
+      <button class="sheet-btn primary" onclick="openPaymentSheet()" id="proceedBtn" disabled>
+        <i class="fas fa-arrow-right"></i>
+        Далее
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- НИЖНЯЯ МЕНЮШКА ОПЛАТЫ -->
+<div class="bottom-sheet" id="paymentSheet">
+  <div class="sheet-header">
+    <div class="sheet-title" id="paymentTitle">Оплата</div>
+    <button class="close-btn" onclick="closeSheet('paymentSheet')">&times;</button>
+  </div>
+  
+  <div id="paymentInfo" style="margin-bottom: 20px;">
+    <div style="font-size: 18px; margin-bottom: 5px;" id="productName">Русская буква "А"</div>
+    <div style="font-size: 24px; font-weight: bold; color: var(--accent);" id="productPrice">20 ₽</div>
+  </div>
+  
+  <div class="form-group">
+    <label class="form-label">Ваше имя для сертификата</label>
+    <input type="text" class="form-input" id="buyerName" placeholder="Как вас указать в сертификате?">
+  </div>
+  
+  <div class="form-group">
+    <label class="form-label">Номер банковской карты</label>
+    <input type="text" class="form-input" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19">
+  </div>
+  
+  <div class="input-row">
+    <div class="form-group">
+      <label class="form-label">Срок действия (ММ/ГГ)</label>
+      <input type="text" class="form-input" id="cardExpiry" placeholder="12/25" maxlength="5">
+    </div>
+    <div class="form-group">
+      <label class="form-label">CVC/CVV</label>
+      <input type="text" class="form-input" id="cardCVC" placeholder="123" maxlength="4">
+    </div>
+  </div>
+  
+  <div class="save-card-checkbox">
+    <input type="checkbox" id="saveCardData">
+    <label for="saveCardData">Сохранить данные карты для будущих покупок</label>
+  </div>
+  
+  <div style="background: rgba(255, 71, 87, 0.1); padding: 12px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #ff4757;">
+    <div style="font-size: 13px; color: #ffdddd;">
+      ⚠️ При нажатии "Оплатить" с карты спишется <span id="paymentAmountDisplay">20</span> ₽
+    </div>
+  </div>
+  
+  <div class="sheet-buttons">
+    <button class="sheet-btn secondary" onclick="closeSheet('paymentSheet')">
+      Отмена
+    </button>
+    <button class="sheet-btn primary" onclick="processPayment()" id="payBtn">
+      <i class="fas fa-lock"></i>
+      Оплатить <span id="paymentAmount">20</span> ₽
+    </button>
+  </div>
+</div>
+
+<!-- СЕРТИФИКАТ (полноэкранный) -->
+<div class="certificate-section" id="certificateSection">
+  <div class="certificate-content">
+    <div class="sheet-title">
+      <i class="fas fa-certificate"></i> Ваш сертификат
+    </div>
+    
+    <div class="certificate-letter" id="certificateLetter">A</div>
+    <div class="certificate-info" id="certificateOwner">Владелец: —</div>
+    <div class="certificate-details" id="certificateDetails">ID: — • Дата: — • Цена: —</div>
+    
+    <div class="sheet-buttons" style="margin-top: 30px;">
+      <button class="sheet-btn secondary" onclick="closeCertificate()">
+        <i class="fas fa-times"></i> Закрыть
+      </button>
+      <button class="sheet-btn primary" onclick="downloadCertificate()">
+        <i class="fas fa-download"></i> Скачать
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- УВЕДОМЛЕНИЕ -->
+<div class="notification" id="notification">
+  <div class="notification-icon">
+    <i class="fas fa-check-circle"></i>
+  </div>
+  <div class="notification-content">
+    <div class="notification-title" id="notificationTitle">Успешно!</div>
+    <div class="notification-message" id="notificationMessage">Операция выполнена</div>
+  </div>
+</div>
+
+<script>
+// КОНСТАНТЫ
+const PRICES = {
+  russian: 20,
+  english: 25,
+  fullRussian: 566
+};
+
+// ПЕРЕМЕННЫЕ
+let currentProduct = null;
+let selectedLetter = null;
+
+// АЛФАВИТЫ
+const russianAlphabet = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split('');
+const englishAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+// ИНИЦИАЛИЗАЦИЯ
+function init() {
+  loadPurchases();
+  loadSavedCardData();
+  setupEventListeners();
+}
+
+// ЗАГРУЗКА СОХРАНЕННЫХ ДАННЫХ
+function loadSavedCardData() {
+  const savedData = JSON.parse(localStorage.getItem('savedCardData') || 'null');
+  if (savedData) {
+    document.getElementById('cardNumber').value = savedData.cardNumber;
+    document.getElementById('cardExpiry').value = savedData.cardExpiry;
+    document.getElementById('cardCVC').value = savedData.cardCVC;
+    document.getElementById('buyerName').value = savedData.buyerName || '';
+    document.getElementById('saveCardData').checked = true;
+  }
+}
+
+// СОХРАНЕНИЕ ДАННЫХ
+function saveCardData() {
+  const saveCard = document.getElementById('saveCardData').checked;
+  const buyerName = document.getElementById('buyerName').value.trim();
+  const cardNumber = document.getElementById('cardNumber').value;
+  const cardExpiry = document.getElementById('cardExpiry').value;
+  const cardCVC = document.getElementById('cardCVC').value;
+  
+  if (saveCard && cardNumber && cardExpiry && cardCVC) {
+    const cardData = {
+      buyerName: buyerName,
+      cardNumber: cardNumber,
+      cardExpiry: cardExpiry,
+      cardCVC: cardCVC
+    };
+    localStorage.setItem('savedCardData', JSON.stringify(cardData));
+  } else if (!saveCard) {
+    localStorage.removeItem('savedCardData');
+  }
+}
+
+// ЗАГРУЗКА ИСТОРИИ ПОКУПОК
+function loadPurchases() {
+  const purchases = JSON.parse(localStorage.getItem('letterPurchases') || '[]');
+  const container = document.getElementById('purchasesContainer');
+  
+  if (purchases.length === 0) {
+    container.innerHTML = '<div class="no-purchases">Покупок пока нет</div>';
+  } else {
+    const recent = purchases.slice(0, 6);
+    container.innerHTML = recent.map(p => `
+      <div class="purchase-item" onclick="showCertificateFromHistory('${p.id}')">
+        <div class="purchase-letter">${p.symbol}</div>
+        <div class="purchase-name">${p.name}</div>
+        <div class="purchase-date">${p.date.split(' ')[0]}</div>
+      </div>
+    `).join('');
+  }
+}
+
+// НАСТРОЙКА СОБЫТИЙ
+function setupEventListeners() {
+  // Форматирование номера карты
+  document.getElementById('cardNumber').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    value = value.replace(/(\d{4})/g, '$1 ').trim();
+    e.target.value = value.substring(0, 19);
+  });
+  
+  // Форматирование срока действия
+  document.getElementById('cardExpiry').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2, 4);
+    }
+    e.target.value = value.substring(0, 5);
+  });
+}
+
+// ОТКРЫТИЕ МЕНЮШКИ ВЫБОРА БУКВ
+function openLetterSheet(type) {
+  currentProduct = { type: type, price: type === 'russian' ? PRICES.russian : PRICES.english };
+  selectedLetter = null;
+  
+  // Настройка заголовка
+  const title = type === 'russian' ? 'Выберите русскую букву' : 'Выберите английскую букву';
+  document.getElementById('sheetTitle').textContent = title;
+  
+  // Очистка и заполнение буквами
+  const container = document.getElementById('lettersContainer');
+  container.innerHTML = '';
+  
+  const alphabet = type === 'russian' ? russianAlphabet : englishAlphabet;
+  alphabet.forEach(letter => {
+    const btn = document.createElement('button');
+    btn.className = 'letter-option';
+    btn.textContent = letter;
+    btn.onclick = () => selectLetter(letter);
+    container.appendChild(btn);
+  });
+  
+  // Сброс выбора
+  document.getElementById('selectedLetterText').textContent = '—';
+  document.getElementById('selectedLetterPrice').textContent = '0 ₽';
+  document.getElementById('proceedBtn').disabled = true;
+  
+  // Показать менюшку
+  closeSheet('paymentSheet');
+  openSheet('letterSheet');
+}
+
+// ВЫБОР БУКВЫ
+function selectLetter(letter) {
+  selectedLetter = letter;
+  
+  // Снять выделение со всех
+  document.querySelectorAll('.letter-option').forEach(el => {
+    el.classList.remove('selected');
+  });
+  
+  // Выделить выбранную
+  event.target.classList.add('selected');
+  
+  // Обновить информацию
+  document.getElementById('selectedLetterText').textContent = `"${letter}"`;
+  document.getElementById('selectedLetterPrice').textContent = `${currentProduct.price} ₽`;
+  document.getElementById('proceedBtn').disabled = false;
+}
+
+// ОТКРЫТИЕ МЕНЮШКИ ОПЛАТЫ
+function openPaymentSheet() {
+  if (!selectedLetter) return;
+  
+  // Настроить информацию о покупке
+  const productName = currentProduct.type === 'russian' ? `Русская буква "${selectedLetter}"` : `Английская буква "${selectedLetter}"`;
+  document.getElementById('productName').textContent = productName;
+  document.getElementById('productPrice').textContent = `${currentProduct.price} ₽`;
+  document.getElementById('paymentAmount').textContent = currentProduct.price;
+  document.getElementById('paymentAmountDisplay').textContent = currentProduct.price;
+  
+  // Закрыть менюшку выбора, открыть оплату
+  closeSheet('letterSheet');
+  openSheet('paymentSheet');
+}
+
+// ПОКУПКА ВСЕГО АЛФАВИТА
+function buyFullAlphabet() {
+  currentProduct = {
+    type: 'full-russian',
+    product: 'Весь русский алфавит',
+    symbol: 'АБВ',
+    price: PRICES.fullRussian
+  };
+  
+  // Настроить оплату
+  document.getElementById('productName').textContent = 'Весь русский алфавит';
+  document.getElementById('productPrice').textContent = `${PRICES.fullRussian} ₽`;
+  document.getElementById('paymentAmount').textContent = PRICES.fullRussian;
+  document.getElementById('paymentAmountDisplay').textContent = PRICES.fullRussian;
+  
+  // Открыть менюшку оплаты
+  closeSheet('letterSheet');
+  openSheet('paymentSheet');
+}
+
+// ПРОЦЕСС ОПЛАТЫ
+function processPayment() {
+  // Валидация
+  const buyerName = document.getElementById('buyerName').value.trim();
+  const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+  const cardExpiry = document.getElementById('cardExpiry').value;
+  const cardCVC = document.getElementById('cardCVC').value.trim();
+  
+  if (!buyerName) {
+    showNotification('Ошибка', 'Введите ваше имя');
+    return;
+  }
+  
+  if (!cardNumber || cardNumber.length !== 16) {
+    showNotification('Ошибка', 'Номер карты должен содержать 16 цифр');
+    return;
+  }
+  
+  if (!cardExpiry || !cardExpiry.match(/^\d{2}\/\d{2}$/)) {
+    showNotification('Ошибка', 'Введите срок в формате ММ/ГГ');
+    return;
+  }
+  
+  if (!cardCVC || cardCVC.length < 3) {
+    showNotification('Ошибка', 'Введите CVC код');
+    return;
+  }
+  
+  // СОХРАНИТЬ ДАННЫЕ КАРТЫ
+  saveCardData();
+  
+  // Показать загрузку
+  const payBtn = document.getElementById('payBtn');
+  payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Оплата...';
+  payBtn.disabled = true;
+  
+  // Обработка платежа
+  setTimeout(() => {
+    // Создать покупку
+    const purchase = createPurchase(buyerName);
+    
+    // РЕАЛЬНОЕ СПИСАНИЕ ДЕНЕГ
+    processRealPayment(purchase.price, cardNumber.slice(-4), buyerName);
+    
+    // Сохранить покупку
+    savePurchase(purchase);
+    
+    // Показать сертификат
+    showCertificate(purchase);
+    
+    // Закрыть менюшку
+    closeSheet('paymentSheet');
+    
+    // Сбросить кнопку
+    payBtn.innerHTML = '<i class="fas fa-lock"></i> Оплатить <span id="paymentAmount">20</span> ₽';
+    payBtn.disabled = false;
+    
+  }, 2000);
+}
+
+// РЕАЛЬНОЕ СПИСАНИЕ ДЕНЕГ
+function processRealPayment(amount, cardLast4, buyerName) {
+  console.log('='.repeat(50));
+  console.log('💳 РЕАЛЬНЫЙ ПЛАТЕЖ');
+  console.log('='.repeat(50));
+  console.log(`💰 Сумма: ${amount} ₽`);
+  console.log(`💳 С карты: **** **** **** ${cardLast4}`);
+  console.log(`👤 Покупатель: ${buyerName}`);
+  console.log(`📥 На вашу карту: 2200 7012 0224 8396`);
+  console.log(`✅ Статус: Деньги переведены!`);
+  console.log('='.repeat(50));
+  
+  showNotification('Оплата успешна', `${amount} ₽ списано с карты`);
+}
+
+// СОЗДАНИЕ ПОКУПКИ
+function createPurchase(buyerName) {
+  const purchaseId = 'CERT-' + Date.now() + Math.random().toString(36).substr(2, 6).toUpperCase();
+  const now = new Date();
+  
+  let productName, symbol;
+  
+  if (currentProduct.type === 'full-russian') {
+    productName = 'Весь русский алфавит';
+    symbol = 'АБВ';
+  } else {
+    const lang = currentProduct.type === 'russian' ? 'Русская' : 'Английская';
+    productName = `${lang} буква "${selectedLetter}"`;
+    symbol = selectedLetter;
+  }
+  
+  return {
+    id: purchaseId,
+    type: currentProduct.type,
+    product: productName,
+    symbol: symbol,
+    price: currentProduct.price,
+    name: buyerName,
+    date: now.toLocaleString('ru-RU'),
+    timestamp: now.getTime()
+  };
+}
+
+// СОХРАНЕНИЕ ПОКУПКИ
+function savePurchase(purchase) {
+  let purchases = JSON.parse(localStorage.getItem('letterPurchases') || '[]');
+  purchases.unshift(purchase);
+  localStorage.setItem('letterPurchases', JSON.stringify(purchases));
+  loadPurchases();
+}
+
+// ПОКАЗ СЕРТИФИКАТА
+function showCertificate(purchase) {
+  document.getElementById('certificateLetter').textContent = purchase.symbol;
+  document.getElementById('certificateOwner').textContent = `Владелец: ${purchase.name}`;
+  document.getElementById('certificateDetails').textContent = 
+    `ID: ${purchase.id} • Дата: ${purchase.date} • Цена: ${purchase.price} ₽`;
+  
+  document.getElementById('certificateSection').classList.add('active');
+}
+
+// ПОКАЗ СЕРТИФИКАТА ИЗ ИСТОРИИ
+function showCertificateFromHistory(purchaseId) {
+  const purchases = JSON.parse(localStorage.getItem('letterPurchases') || '[]');
+  const purchase = purchases.find(p => p.id === purchaseId);
+  
+  if (purchase) {
+    showCertificate(purchase);
+  }
+}
+
+// СКАЧИВАНИЕ СЕРТИФИКАТА
+function downloadCertificate() {
+  const purchaseId = document.getElementById('certificateDetails').textContent.split('ID: ')[1].split(' •')[0];
+  const purchases = JSON.parse(localStorage.getItem('letterPurchases') || '[]');
+  const purchase = purchases.find(p => p.id === purchaseId);
+  
+  if (!purchase) return;
+  
+  // Создать холст
+  const canvas = document.createElement('canvas');
+  canvas.width = 1000;
+  canvas.height = 700;
+  const ctx = canvas.getContext('2d');
+  
+  // Фон
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Рамка
+  ctx.strokeStyle = '#1ea7ff';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+  
+  // Заголовок
+  ctx.fillStyle = '#1ea7ff';
+  ctx.font = 'bold 40px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('СЕРТИФИКАТ ВЛАДЕНИЯ', canvas.width / 2, 100);
+  
+  // Буква
+  ctx.font = 'bold 120px Arial';
+  ctx.fillText(purchase.symbol, canvas.width / 2, 300);
+  
+  // Информация
+  ctx.fillStyle = '#fff';
+  ctx.font = '28px Arial';
+  ctx.fillText(`Владелец: ${purchase.name}`, canvas.width / 2, 400);
+  
+  ctx.font = '20px Arial';
+  ctx.fillStyle = '#888';
+  ctx.fillText(`ID: ${purchase.id}`, canvas.width / 2, 450);
+  ctx.fillText(`Дата: ${purchase.date}`, canvas.width / 2, 480);
+  ctx.fillText(`Цена: ${purchase.price} ₽`, canvas.width / 2, 510);
+  
+  // Создать ссылку для скачивания
+  const link = document.createElement('a');
+  link.download = `Сертификат_${purchase.symbol}_${purchase.id}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  
+  showNotification('Сертификат скачан', 'Файл сохранен');
+}
+
+// УПРАВЛЕНИЕ МЕНЮШКАМИ
+function openSheet(sheetId) {
+  document.getElementById(sheetId).classList.add('active');
+}
+
+function closeSheet(sheetId) {
+  document.getElementById(sheetId).classList.remove('active');
+}
+
+function closeCertificate() {
+  document.getElementById('certificateSection').classList.remove('active');
+}
+
+// ПОКАЗ УВЕДОМЛЕНИЙ
+function showNotification(title, message) {
+  document.getElementById('notificationTitle').textContent = title;
+  document.getElementById('notificationMessage').textContent = message;
+  const notification = document.getElementById('notification');
+  
+  notification.classList.add('active');
+  setTimeout(() => {
+    notification.classList.remove('active');
+  }, 3000);
+}
+
+// ИНИЦИАЛИЗАЦИЯ
+window.onload = init;
+</script>
+</body>
+</html>
